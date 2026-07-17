@@ -20,15 +20,11 @@
     loop: "{{ instance }}"
     register: ec2_output
 
-  # - name: ec2 output
-  #   ansible.builtin.debug:
-  #     msg: "{{ ec2_output }}"
-
   - name: r53 record
     amazon.aws.route53:
       state: present
       zone: "{{ zone_id }}"
-      record: "{{ item.item }}"
+      record: "{{ item.item }}.{{ domain_name }}"
       type: A
       ttl: 1
       value: "{{ item.instances[0].private_ip_address }}"
