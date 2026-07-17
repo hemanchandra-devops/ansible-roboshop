@@ -7,7 +7,7 @@
     zone_id: "Z09005143JOTSHTMIUST8"
     domain_name: "heman.icu"
     instance:
-    - mongodb
+      - mongodb
   tasks:
   - name: ec2 instance
     amazon.aws.ec2_instance:
@@ -20,12 +20,12 @@
     loop: "{{ instance }}"
     register: "{{ ec2_output }}"
 
-  - name: r53 record
-    amazon.aws.route53:
-      state: present
-      zone: "{{ zone_id }}"
-      record: "{{}}"
-      type: A
-      ttl: 1
-      value: 
-      overwrite: true
+  # - name: r53 record
+  #   amazon.aws.route53:
+  #     state: present
+  #     zone: "{{ zone_id }}"
+  #     record: "{{}}"
+  #     type: A
+  #     ttl: 1
+  #     value: 
+  #     overwrite: true
