@@ -18,7 +18,11 @@
       tags:
         Name: "{{ item }}"
     loop: "{{ instance }}"
-    register: "{{ ec2_output }}"
+    register: ec2_output
+
+  - name: ec2 output
+    ansible.builtin.debug:
+      msg: "{{ ec2_output }}"
 
   # - name: r53 record
   #   amazon.aws.route53:
