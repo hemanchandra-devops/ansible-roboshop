@@ -68,7 +68,7 @@
       state: present
 
   - name: Check if shipping database exists
-    ansible.builtin.command: mysql -h mysql.heman.icu -uroot -pRoboShop@1 -e "USE cities;"
+    ansible.builtin.shell: mysql -h mysql.heman.icu -uroot -pRoboShop@1 -e "USE cities;"
     register: shipping_output
 
   - name: shipping output
