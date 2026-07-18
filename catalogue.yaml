@@ -62,12 +62,12 @@
       state: present
 
   - name: Check if catalogue database exists
-    ansible.builtin.command: mongosh mongodb.heman.icu --quiet --eval "db.getMongo().getDBNames().includes('catalogue')")
-    register: catalogue_db
+    ansible.builtin.command: mongosh mongodb.heman.icu --quiet --eval "db.getMongo().getDBNames().includes('catalogue')"
+    register: catalogue_output
 
   - name: catalogue output
     ansible.builtin.debug:
-      msg: "{{ catalogue_db }}"
+      msg: "{{ catalogue_output }}"
 
   # - name: load products into mongodb
   #   ansible.builtin.shell: mongosh --host mongodb.heman.icu </app/db/master-data.js
