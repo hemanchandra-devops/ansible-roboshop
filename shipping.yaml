@@ -90,7 +90,7 @@
     - /app/db/schema.sql
     - /app/db/app-user.sql 
     - /app/db/master-data.sql
-    when: shipping_output.stdout == "True"
+    when: shipping_output.stdout != "cities"
 
   - name: restart shipping service
     ansible.builtin.systemd_service:
