@@ -68,12 +68,15 @@
       state: present
 
   - name: Check if shipping database exists
-    ansible.builtin.shell: mysql -h mysql.heman.icu -uroot -pRoboShop@1 -e "USE cities;"
+    ansible.builtin.shell: |
+      mysql -h mysql.heman.icu -uroot -pRoboShop@1 -N -e "SHOW DATABASES LIKE 'cities';"
     register: shipping_output
+    changed_when: false
+    failed_when: false
 
-  - name: shipping output
+  - name: Display shipping database check result
     ansible.builtin.debug:
-      msg: "{{ shipping_output }}"
+      msg: "Database exists: {{ shipping_output.stdout == 'cities' }}"
 
   # - name: load products into mysql
   #   community.mysql.mysql_db:
