@@ -67,6 +67,10 @@
       name: mysql
       state: present
 
+  - name: Install PyMySQL dependency
+    ansible.builtin.pip:
+      name: PyMySQL
+
   - name: Check if shipping database exists
     ansible.builtin.shell: |
       mysql -h mysql.heman.icu -uroot -pRoboShop@1 -N -e "SHOW DATABASES LIKE 'cities';"
