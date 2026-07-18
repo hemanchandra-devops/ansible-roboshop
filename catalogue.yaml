@@ -45,11 +45,12 @@
       src: catalogue.service
       dest: /etc/systemd/system/catalogue.service
 
-  - name: start, enable catalogue
-    ansible.builtin.service:
+  - name: start, enable and demon reload catalogue 
+    ansible.builtin.systemd_service:
       name: catalogue 
       state: started
       enabled: yes
+      daemon_reload: true
 
   - name: copy mongo repo
     ansible.builtin.copy:
@@ -74,6 +75,6 @@
     when: catalogue_output.stdout == "false"
 
   - name: restart catalogue service
-    ansible.builtin.service:
+    ansible.builtin.systemd_service:
       name: catalogue
       state: restarted
