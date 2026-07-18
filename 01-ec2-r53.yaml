@@ -6,8 +6,8 @@
     sg_id: "sg-03ff2631c7d5b0649"
     zone_id: "Z09005143JOTSHTMIUST8"
     domain_name: "heman.icu"
-    instance:
-      - mongodb
+    # instances:
+    #   - mongodb
   tasks:
   - name: ec2 instance
     amazon.aws.ec2_instance:
@@ -17,7 +17,7 @@
       image_id: "{{ ami_id }}"
       tags:
         Name: "{{ item }}"
-    loop: "{{ instance }}"
+    loop: "{{ instances }}"
     register: ec2_output
 
   - name: r53 record
