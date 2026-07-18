@@ -22,7 +22,7 @@
   - name: remove default html 
     ansible.builtin.file:
       state: absent
-      path: /usr/share/nginx/html/*
+      path: /usr/share/nginx/html
 
   - name: create html 
     ansible.builtin.file:
