@@ -20,10 +20,20 @@
       system: true
       shell: /sbin/nologin
 
+  - name: delete existing app directory
+    ansible.builtin.file:
+      state: absent
+      path: /app
+
   - name: create app directory
     ansible.builtin.file:
       state: directory
       path: /app
+
+  - name: delete existing catalogue application
+    ansible.builtin.file:
+      state: absent
+      path: /tmp/catalogue.zip
   
   - name: download catalogue application
     ansible.builtin.get_url:

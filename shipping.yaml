@@ -1,0 +1,95 @@
+- name: setup shipping server
+  hosts: shipping
+  become: yes
+  tasks:
+  - name: install maven
+    ansible.builtin.dnf:
+      name: maven
+      state: present
+  
+  - name: create roboshop system user
+    ansible.builtin.user:
+      name: roboshop
+      comment: roboshop system user
+      system: true
+      shell: /sbin/nologin
+
+  - name: delete existing app directory
+    ansible.builtin.file:
+      state: absent
+      path: /app
+
+  - name: create app directory
+    ansible.builtin.file:
+      state: directory
+      path: /app
+
+  - name: delete existing shipping application
+    ansible.builtin.file:
+      state: absent
+      path: /tmp/shipping.zip
+  
+  - name: download shipping application
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+      dest: /tmp/shipping.zip
+
+  - name: unzip shipping application
+    ansible.builtin.unarchive:
+      src: /tmp/shipping.zip
+      dest: /app
+      remote_src: yes
+
+  - name: mvn clean package 
+    ansible.builtin.command: mvn clean package
+    args:
+      chdir: /app
+
+  - name: move jar file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar 
+    args:
+      chdir: /app    
+
+  - name: copy shipping service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+
+  - name: start, enable and demon reload shipping 
+    ansible.builtin.systemd_service:
+      name: shipping 
+      state: started
+      enabled: yes
+      daemon_reload: true
+
+  - name: install mysql client
+    ansible.builtin.dnf:
+      name: mysql
+      state: present
+
+  - name: Check if shipping database exists
+    ansible.builtin.command: mysql -h mysql.heman.icu -uroot -pRoboShop@1 -e "USE cities;"
+    register: shipping_output
+
+  - name: shipping output
+    ansible.builtin.debug:
+      msg: "{{ shipping_output }}"
+
+  # - name: load products into mysql
+  #   community.mysql.mysql_db:
+  #       name: mydb
+  #       state: import
+  #       target: "{{ item }}"
+  #       login_host: mysql.heman.icu
+  #       login_user: root
+  #       login_password: RoboShop@1
+  #   loop: 
+  #   - /app/db/schema.sql
+  #   - /app/db/app-user.sql 
+  #   - /app/db/master-data.sql
+  #   when: shipping_output.stdout != 0
+
+  # - name: restart shipping service
+  #   ansible.builtin.systemd_service:
+  #     name: shipping
+  #     state: restarted
