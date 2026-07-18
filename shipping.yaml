@@ -78,13 +78,13 @@
     changed_when: false
     failed_when: false
 
-  # - name: Display shipping database check result
-  #   ansible.builtin.debug:
-  #     msg: "Database exists: {{ shipping_output.stdout == 'cities' }}"
+  - name: Display shipping database check result
+    ansible.builtin.debug:
+      msg: "Database exists: {{ shipping_output.stdout == 'cities' }}"
 
   - name: load products into mysql
     community.mysql.mysql_db:
-        name: mydb
+        name: all
         state: import
         target: "{{ item }}"
         login_host: mysql.heman.icu
